@@ -1,0 +1,7 @@
+packages:
+  - package: Datavault-UK/dbtvault
+    version: 0.9.5
+  - package: calogica/dbt_date
+    version: 0.10.1
+  - package: dbt-labs/dbt_external_tables
+    version: 0.9.0

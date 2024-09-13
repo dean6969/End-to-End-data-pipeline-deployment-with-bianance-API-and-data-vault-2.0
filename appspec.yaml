@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/app
+    overwrite: true
+
+hooks:
+  AfterInstall:
+    - location: run_docker_compose.sh
+      timeout: 300
+      runas: ec2-user

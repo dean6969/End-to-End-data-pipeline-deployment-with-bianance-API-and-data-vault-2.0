@@ -1,0 +1,14 @@
+dbtvault_snowflake_demo:  # Replace with your desired profile name
+  target: dev  # The default target to run (dev, prod, etc.)
+  outputs:
+    dev:
+      type: snowflake
+      account:   # Your Snowflake account identifier
+      user: mankay1805  # Your Snowflake username
+      password: CHungpro$$12  # Your Snowflake password (use environment variables for security)
+      role: ACCOUNTADMIN  # The role to assume in Snowflake
+      database: DV_TEST  # Replace with your Snowflake database name
+      warehouse: COMPUTE_WH  # Your Snowflake warehouse
+      schema: STAGE  # Replace with your Snowflake schema
+      threads: 4  # Number of threads for parallel execution
+      client_session_keep_alive: False  # Optional: Keeps the session alive if set to True
