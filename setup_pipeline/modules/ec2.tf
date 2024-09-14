@@ -96,3 +96,9 @@ resource "aws_iam_instance_profile" "my_ec2_role" {
   name = "${var.project_name}-instance_profile-${var.env_name}"
   role = aws_iam_role.my_ec2_role.name
 }
+
+resource "aws_iam_role_policy_attachment" "ec2_secret_mananger_policy" {
+  role       = aws_iam_role.my_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+}
+

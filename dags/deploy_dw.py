@@ -48,6 +48,8 @@ def get_secret():
     return secret
 secret = get_secret()
 
+print(secret)
+
 
 profile_config = ProfileConfig(profile_name="dbtvault_snowflake_demo",
                                target_name="dev",
