@@ -38,7 +38,7 @@ resource "aws_iam_role_policy" "binance_consumer_Policy" {
           "kinesis:ListStreams",
           "kinesis:SubscribeToShard"
         ]
-        Resource = aws_kinesis_stream.binance_stream.arn
+        Resource = "*"
       },
       {
         Effect = "Allow"

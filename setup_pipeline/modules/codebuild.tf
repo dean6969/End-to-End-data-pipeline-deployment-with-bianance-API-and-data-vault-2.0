@@ -78,7 +78,11 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "iam:AttachRolePolicy",
           "iam:PutRolePolicy",
           "iam:PassRole",
-          "iam:GetRole"
+          "iam:GetRole",
+          "iam:ListRolePolicies",
+          "iam:ListAttachedRolePolicies",
+          "iam:PutRolePolicy",
+          "iam:ListInstanceProfilesForRole"
         ],
         Resource = "*"
       },
@@ -92,7 +96,8 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "kinesis:GetShardIterator",
           "kinesis:ListShards",
           "kinesis:ListStreams",
-          "kinesis:SubscribeToShard"
+          "kinesis:SubscribeToShard",
+          "kinesis:createStream"
         ],
         Resource = "*"
       },
