@@ -7,3 +7,4 @@ setup_pipeline/.terraform.lock.hcl
 setup_pipeline/terraform.tfstate
 setup_pipeline/terraform.tfstate.backup
 functions/consumer.zip/
+logs
