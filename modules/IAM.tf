@@ -1,6 +1,6 @@
 # IAM roles and policies for the Kinesis Producer and Consumer Lambda functions
-resource "aws_iam_role" "KP1ConsumerRole" {
-  name = "KP1ConsumerRole"
+resource "aws_iam_role" "binance_consumer_Role" {
+  name = "binance_consumer_Role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -20,10 +20,10 @@ resource "aws_iam_role" "KP1ConsumerRole" {
   ]
 }
 
-# Create a policy for the KP1ConsumerRole
-resource "aws_iam_role_policy" "KP1ConsumerPolicy" {
-  name   = "KP1ConsumerPolicy"
-  role   = aws_iam_role.KP1ConsumerRole.id
+# Create a policy for the binance_consumer_Role
+resource "aws_iam_role_policy" "binance_consumer_Policy" {
+  name   = "binance_consumer_Policy"
+  role   = aws_iam_role.binance_consumer_Role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -38,7 +38,7 @@ resource "aws_iam_role_policy" "KP1ConsumerPolicy" {
           "kinesis:ListStreams",
           "kinesis:SubscribeToShard"
         ]
-        Resource = aws_kinesis_stream.KP1DataStream.arn
+        Resource = aws_kinesis_stream.binance_stream.arn
       },
       {
         Effect = "Allow"
@@ -49,8 +49,8 @@ resource "aws_iam_role_policy" "KP1ConsumerPolicy" {
           "s3:ListBucket"
         ]
         Resource = [
-          "${aws_s3_bucket.KP1DataBucket.arn}",
-          "${aws_s3_bucket.KP1DataBucket.arn}/*"
+          "${aws_s3_bucket.binance_streaming_bucket.arn}",
+          "${aws_s3_bucket.binance_streaming_bucket.arn}/*"
         ]
       },
     ]
