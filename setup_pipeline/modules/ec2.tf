@@ -1,6 +1,6 @@
 # Tạo EC2 Instance
 resource "aws_instance" "my_ec2" {
-  ami           = "ami-0182f373e66f89c85" # Thay bằng AMI phù hợp với vùng của bạn
+  ami           = "ami-0a5c3558529277641" # Thay bằng AMI phù hợp với vùng của bạn
   instance_type = "t2.large"
 
   tags = {
