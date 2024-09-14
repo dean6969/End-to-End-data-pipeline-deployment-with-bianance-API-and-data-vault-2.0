@@ -86,7 +86,9 @@ resource "aws_iam_role_policy" "codebuild_policy" {
 				"iam:DetachRolePolicy",
 				"iam:DeleteRole",
 				"iam:ListAttachedUserPolicies",
-				"iam:ListPolicyVersions"
+				"iam:ListPolicyVersions",
+				"iam:GetRolePolicy",
+				"iam:DeleteRolePolicy"
         ],
         Resource = "*"
       },

@@ -6,6 +6,8 @@ resource "aws_kinesis_stream" "binance_stream" {
   stream_mode_details {
     stream_mode = "PROVISIONED"
   }
+
+  enforce_consumer_deletion = true
 }
 
 output "kinesis_stream_name" {
