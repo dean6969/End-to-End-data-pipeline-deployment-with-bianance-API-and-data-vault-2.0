@@ -9,9 +9,9 @@ hooks:
     - location: scripts/install_dependencies.sh
       runas: root
 
-  Applicationbuild:
-    - location: scripts/build.sh
-      runas: root
+  # Applicationbuild:
+  #   - location: scripts/build.sh
+  #     runas: root
 
   ApplicationStart:
     - location: scripts/start_docker.sh

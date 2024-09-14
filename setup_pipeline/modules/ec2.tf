@@ -44,20 +44,23 @@ resource "aws_security_group" "ec2_sg" {
   name        = "${var.project_name}-airflow-sg-${var.env_name}"
   description = "Block all inbound traffic and allow only SSM outbound traffic"
 
-   # Mở tất cả inbound traffic (từ bất kỳ đâu)
+   # Chặn tất cả inbound traffic
   ingress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"  # Cho phép tất cả các giao thức
-    cidr_blocks = ["0.0.0.0/0"]  # Cho phép từ bất kỳ địa chỉ IP nào
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Chặn tất cả inbound traffic"
   }
 
-  # Mở tất cả outbound traffic (tới bất kỳ đâu)
+  # Mở outbound traffic cho SSM và CodeDeploy qua cổng 443 (HTTPS)
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"  # Cho phép tất cả các giao thức
-    cidr_blocks = ["0.0.0.0/0"]  # Cho phép tới bất kỳ địa chỉ IP nào
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    # Chỉ cho phép kết nối đến các endpoint của AWS
+    cidr_blocks = ["10.0.0.0/8"] # CIDR này giả định, bạn nên cập nhật theo các dải IP của AWS
+    description = "Cho phép outbound traffic qua cổng 443 cho SSM và CodeDeploy"
   }
 
   tags = {
