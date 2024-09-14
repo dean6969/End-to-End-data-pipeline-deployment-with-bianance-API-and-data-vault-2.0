@@ -1,12 +1,15 @@
 from datetime import datetime
 import os
-from cosmos import DbtDag, ProjectConfig, ProfileConfig, ExecutionConfig, DbtDepsLocalOperator, DbtTaskGroup
+from cosmos import  ProjectConfig, ProfileConfig, ExecutionConfig, DbtDepsLocalOperator, DbtTaskGroup
 from cosmos.profiles import SnowflakeUserPasswordProfileMapping
 from airflow import settings
 from airflow.models import Connection
 from airflow.operators.python import PythonOperator
 # from airflow import DAG
 from airflow.decorators import dag
+import boto3
+from botocore.exceptions import ClientError
+import ast
 
 # dag = DAG(
 #     dag_id="main_dag",
@@ -14,6 +17,36 @@ from airflow.decorators import dag
 #     schedule_interval="@daily",
 #     catchup=False
 # )
+
+import boto3
+from botocore.exceptions import ClientError
+
+
+def get_secret():
+
+    secret_name = "snowflake_credential"
+    region_name = "us-east-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = ast.literal_eval(get_secret_value_response['SecretString'])
+
+    return secret
+secret = get_secret()
 
 
 profile_config = ProfileConfig(profile_name="dbtvault_snowflake_demo",
@@ -36,11 +69,11 @@ def setup_snowflake_connection():
         # If the connection does not exist, create it
         conn = Connection(
             conn_id=conn_id,
-            schema="STAGE",
-            conn_type="snowflake",
-            login="mankay1805",
-            password="CHungpro$$12",
-            extra={"account": "EDDTNTH-YJ64905", "warehouse": "LARGE_WH", "role": "ACCOUNTADMIN", "database": "DV_TEST"}
+            schema=secret['schema'],
+            conn_type=secret['conn_type'],
+            login=secret['login'],
+            password=secret['password'],
+            extra={"account": secret['account'], "warehouse": secret['warehouse'], "role": secret['role'], "database": secret['database']}
         )
         session.add(conn)
         session.commit()

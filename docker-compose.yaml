@@ -52,7 +52,7 @@ services:
       retries: 5
       start_period: 5s
     restart: always
-    network_mode: host
+
 
   airflow-webserver:
     <<: *airflow-common
@@ -70,7 +70,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    network_mode: host
+
 
   airflow-scheduler:
     <<: *airflow-common
@@ -86,7 +86,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    network_mode: host
+
 
   airflow-init:
     <<: *airflow-common
@@ -151,7 +151,7 @@ services:
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
-    network_mode: host
+
 
 
 volumes:
