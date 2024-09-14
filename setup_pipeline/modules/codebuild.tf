@@ -117,7 +117,8 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "lambda:InvokeFunction",
           "lambda:DeleteFunction",
           "lambda:GetFunction",
-          "lambda:ListVersionsByFunction"
+          "lambda:ListVersionsByFunction",
+          "lambda:GetFunctionCodeSigningConfig"
         ],
         Resource = "*"
       },
