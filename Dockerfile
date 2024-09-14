@@ -20,5 +20,3 @@ RUN python -m venv dbt_venv && \
     . dbt_venv/bin/activate && \
     pip install --no-cache-dir -r requirements.txt && \
     deactivate
-
-RUN airflow connections add sf_test --conn-uri snowflake://mankay1805:CHungpro$$12@/STAGE?account=EDDTNTH-YJ64905&database=DEV_TEST&warehouse=COMPUTE_WH&role=ACCOUNTADMIN

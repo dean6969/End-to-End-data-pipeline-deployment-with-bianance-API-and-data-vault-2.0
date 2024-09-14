@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "setup terraform dependencies"
+      - sudo yum install -y yum-utils
+      - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+      - sudo yum -y install terraform
+
+  pre_build:
+    commands:
+      - echo "Bắt đầu khởi tạo Terraform"
+      - terraform init
+
+  build:
+    commands:
+      - echo "validate terraform configuration"
+      - terraform validate
+      - echo "apply terraform configuration"
+      - terraform apply --auto-approve
+
+artifacts:
+  files:
+    - '**/*'

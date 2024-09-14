@@ -1,0 +1,8 @@
+# Local .terraform directories
+.terraform/
+.terraform.lock.hcl
+.env
+setup_pipeline/.terraform/
+setup_pipeline/.terraform.lock.hcl
+setup_pipeline/terraform.tfstate
+setup_pipeline/terraform.tfstate.backup
