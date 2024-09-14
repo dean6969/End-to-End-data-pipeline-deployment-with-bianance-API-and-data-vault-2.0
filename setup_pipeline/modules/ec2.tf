@@ -44,15 +44,20 @@ resource "aws_security_group" "ec2_sg" {
   name        = "${var.project_name}-airflow-sg-${var.env_name}"
   description = "Block all inbound traffic and allow only SSM outbound traffic"
 
-  # No ingress block: block all inbound traffic
+   # Mở tất cả inbound traffic (từ bất kỳ đâu)
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  # Cho phép tất cả các giao thức
+    cidr_blocks = ["0.0.0.0/0"]  # Cho phép từ bất kỳ địa chỉ IP nào
+  }
 
-  # Egress acceptable for SSM( session manager )
+  # Mở tất cả outbound traffic (tới bất kỳ đâu)
   egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    # CIDR block của AWS SSM hoặc VPC Endpoint nếu bạn dùng VPC Endpoint
-    #cidr_blocks = ["ip_range_for_ssm"] # Bạn cần thay thế "ip_range_for_ssm" bằng dải IP hợp lệ của SSM hoặc sử dụng VPC Endpoint.
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  # Cho phép tất cả các giao thức
+    cidr_blocks = ["0.0.0.0/0"]  # Cho phép tới bất kỳ địa chỉ IP nào
   }
 
   tags = {

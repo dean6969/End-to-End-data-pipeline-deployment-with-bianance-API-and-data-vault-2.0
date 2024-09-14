@@ -14,7 +14,7 @@ resource "aws_codedeploy_deployment_group" "my_deployment_group" {
     ec2_tag_filter {
       key   = "Name"
       type  = "KEY_AND_VALUE"
-      value = "airflow_instance_app"
+      value = "${var.project_name}-airflow-app-${var.env_name}"
     }
   }
 

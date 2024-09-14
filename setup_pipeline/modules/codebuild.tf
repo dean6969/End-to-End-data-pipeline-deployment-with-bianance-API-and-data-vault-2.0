@@ -63,82 +63,22 @@ resource "aws_iam_role_policy" "codebuild_logs_policy" {
 }
 
 # Gắn chính sách cho CodeBuild để có quyền truy cập IAM, Kinesis và Lambda
-resource "aws_iam_role_policy" "codebuild_policy" {
-  name = "${var.project_name}-codebuild-policy-${var.env_name}"
-  role = aws_iam_role.codebuild_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          # IAM permissions
-          "iam:CreateRole",
-				"iam:AttachRolePolicy",
-				"iam:PutRolePolicy",
-				"iam:PassRole",
-				"iam:GetRole",
-				"iam:ListRolePolicies",
-				"iam:ListAttachedRolePolicies",
-				"iam:PutRolePolicy",
-				"iam:ListInstanceProfilesForRole",
-				"iam:DetachRolePolicy",
-				"iam:DeleteRole",
-				"iam:ListAttachedUserPolicies",
-				"iam:ListPolicyVersions",
-				"iam:GetRolePolicy",
-				"iam:DeleteRolePolicy"
-        ],
-        Resource = "*"
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          # Kinesis permissions
-          	"kinesis:DescribeStream",
-          "kinesis:DescribeStreamSummary",
-          "kinesis:GetRecords",
-          "kinesis:GetShardIterator",
-          "kinesis:ListShards",
-          "kinesis:ListStreams",
-          "kinesis:SubscribeToShard",
-          "kinesis:createStream",
-          "kinesis:DeleteStream"
-        ],
-        Resource = "*"
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          # Lambda permissions
-          "lambda:CreateFunction",
-          "lambda:UpdateFunctionCode",
-          "lambda:InvokeFunction",
-          "lambda:DeleteFunction",
-          "lambda:GetFunction",
-          "lambda:ListVersionsByFunction",
-          "lambda:GetFunctionCodeSigningConfig"
-        ],
-        Resource = "*"
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          # S3 permissions (nếu cần)
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:ListBucket"
-        ],
-        Resource = [
-          "arn:aws:s3:::*"
-        ]
-      }
-    ]
-  })
+resource "aws_iam_role_policy_attachment" "codebuild_kinesis_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonKinesisFullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_policy_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_IAM_access" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_lambda_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
 }
