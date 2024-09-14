@@ -36,7 +36,8 @@ resource "aws_iam_role_policy" "binance_consumer_Policy" {
           "kinesis:GetShardIterator",
           "kinesis:ListShards",
           "kinesis:ListStreams",
-          "kinesis:SubscribeToShard"
+          "kinesis:SubscribeToShard",
+          "kinesis:createStream"
         ]
         Resource = "*"
       },

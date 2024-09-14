@@ -75,14 +75,18 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         Action = [
           # IAM permissions
           "iam:CreateRole",
-          "iam:AttachRolePolicy",
-          "iam:PutRolePolicy",
-          "iam:PassRole",
-          "iam:GetRole",
-          "iam:ListRolePolicies",
-          "iam:ListAttachedRolePolicies",
-          "iam:PutRolePolicy",
-          "iam:ListInstanceProfilesForRole"
+				"iam:AttachRolePolicy",
+				"iam:PutRolePolicy",
+				"iam:PassRole",
+				"iam:GetRole",
+				"iam:ListRolePolicies",
+				"iam:ListAttachedRolePolicies",
+				"iam:PutRolePolicy",
+				"iam:ListInstanceProfilesForRole",
+				"iam:DetachRolePolicy",
+				"iam:DeleteRole",
+				"iam:ListAttachedUserPolicies",
+				"iam:ListPolicyVersions"
         ],
         Resource = "*"
       },
@@ -90,14 +94,15 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         Effect = "Allow",
         Action = [
           # Kinesis permissions
-          "kinesis:DescribeStream",
+          	"kinesis:DescribeStream",
           "kinesis:DescribeStreamSummary",
           "kinesis:GetRecords",
           "kinesis:GetShardIterator",
           "kinesis:ListShards",
           "kinesis:ListStreams",
           "kinesis:SubscribeToShard",
-          "kinesis:createStream"
+          "kinesis:createStream",
+          "kinesis:DeleteStream"
         ],
         Resource = "*"
       },
@@ -109,7 +114,8 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "lambda:UpdateFunctionCode",
           "lambda:InvokeFunction",
           "lambda:DeleteFunction",
-          "lambda:GetFunction"
+          "lambda:GetFunction",
+          "lambda:ListVersionsByFunction"
         ],
         Resource = "*"
       },
@@ -127,4 +133,9 @@ resource "aws_iam_role_policy" "codebuild_policy" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
