@@ -77,7 +77,8 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "iam:CreateRole",
           "iam:AttachRolePolicy",
           "iam:PutRolePolicy",
-          "iam:PassRole"
+          "iam:PassRole",
+          "iam:GetRole"
         ],
         Resource = "*"
       },
@@ -85,11 +86,13 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         Effect = "Allow",
         Action = [
           # Kinesis permissions
-          "kinesis:CreateStream",
-          "kinesis:DeleteStream",
           "kinesis:DescribeStream",
-          "kinesis:PutRecord",
-          "kinesis:PutRecords"
+          "kinesis:DescribeStreamSummary",
+          "kinesis:GetRecords",
+          "kinesis:GetShardIterator",
+          "kinesis:ListShards",
+          "kinesis:ListStreams",
+          "kinesis:SubscribeToShard"
         ],
         Resource = "*"
       },
