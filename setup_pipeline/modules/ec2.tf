@@ -1,7 +1,7 @@
 # Tạo EC2 Instance
 resource "aws_instance" "my_ec2" {
   ami           = "ami-0a5c3558529277641" # Thay bằng AMI phù hợp với vùng của bạn
-  instance_type = "t2.large"
+  instance_type = "t2.micro"
 
   tags = {
     Name = "${var.project_name}-airflow-app-${var.env_name}"
