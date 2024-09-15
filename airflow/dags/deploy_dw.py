@@ -11,15 +11,9 @@ import boto3
 from botocore.exceptions import ClientError
 import ast
 
-# dag = DAG(
-#     dag_id="main_dag",
-#     default_args={ 'start_date': datetime(2023, 9, 6)},
-#     schedule_interval="@daily",
-#     catchup=False
-# )
-
 import boto3
 from botocore.exceptions import ClientError
+
 
 
 def get_secret():
@@ -71,11 +65,10 @@ def setup_snowflake_connection():
         # If the connection does not exist, create it
         conn = Connection(
             conn_id=conn_id,
-            schema=secret['schema'],
             conn_type=secret['conn_type'],
             login=secret['login'],
             password=secret['password'],
-            extra={"account": secret['account'], "warehouse": secret['warehouse'], "role": secret['role'], "database": secret['database']}
+            extra={"account": secret['account'],"role": secret['role']}
         )
         session.add(conn)
         session.commit()
@@ -98,9 +91,10 @@ def setup_snowflake_connection():
 #                     dag_id="dbt_snowflake_dag_1")
 
 @dag(
-    schedule_interval="0 8 * * 1-5",
+    schedule_interval="*/2 * * * *",
     start_date=datetime(2023, 1, 1),
-    catchup=False
+    catchup=False,
+    dag_id="basic_cosmos_task_group"
 )
 def basic_cosmos_task_group() -> None:
     # Task to set up Snowflake connection

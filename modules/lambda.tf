@@ -1,8 +1,8 @@
 # Create zip file for lambda function source code
 data "archive_file" "lambda_function_file" {
   type = "zip"
-  source_file = "functions/consumer.py"
-  output_path = "functions/consumer.zip"
+  source_file = "src/lambda_function/consumer.py"
+  output_path = "src/lambda_function/consumer.zip"
 }
 # create lambda function 
 resource "aws_lambda_function" "binance_consumer" {
