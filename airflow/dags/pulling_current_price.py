@@ -12,12 +12,16 @@ def pull_binance_current_price_data():
     region_name = "us-east-1"
 
     # Setup AWS Secrets Manager client
+    # Create a Secrets Manager client
     session = boto3.session.Session()
-    secrets_client = session.client(service_name='secretsmanager', region_name=region_name)
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
 
     # Fetch API key and secret from Secrets Manager
     try:
-        get_secret_value_response = secrets_client.get_secret_value(SecretId=secret_name)
+        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
     except ClientError as e:
         raise e
 
