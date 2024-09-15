@@ -1,28 +1,34 @@
-from airflow import DAG
+from airflow.decorators import dag
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
 from pulling_current_price import pull_binance_current_price_data
 from pulling_price_line_item import pull_binance_price_line_item_data
+from airflow.operators.dummy_operator import DummyOperator
 
-dag = DAG(
-    schedule_interval="* 7 * * 1-5",
+@dag(
+    schedule_interval="* 8 * * 1-5",
     start_date=datetime(2023, 1, 1),
-    catchup=False,
-    dag_id="ETL_PIPELINE_DATA_MODELING"
+    catchup=False
 )
+def pulling_api_to_kinesis():
 
-t1 = PythonOperator(
-    task_id='pull_data_from_binance',
-    python_callable=pull_binance_current_price_data,
-    dag=dag,
-)
+    t0 = DummyOperator(
+        task_id='dummy_task',
+    )   
+    
 
-t2 = PythonOperator(
-    task_id='pull_price_line_item',
-    python_callable=pull_binance_price_line_item_data,
-    dag=dag,
-)
+    t1 = PythonOperator(
+        task_id='pull_data_from_binance',
+        python_callable=pull_binance_current_price_data,
+    )
 
-t1
+    t2 = PythonOperator(
+        task_id='pull_price_line_item',
+        python_callable=pull_binance_price_line_item_data,
+    )
 
-t2
+    t0 >> t1 
+
+    t0 >> t2
+
+pulling_api_to_kinesis = pulling_api_to_kinesis()

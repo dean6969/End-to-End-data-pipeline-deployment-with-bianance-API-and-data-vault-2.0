@@ -1,6 +1,5 @@
 from datetime import datetime
-import os
-from cosmos import  ProjectConfig, ProfileConfig, ExecutionConfig, DbtDepsLocalOperator, DbtTaskGroup
+from cosmos import  ProjectConfig, ProfileConfig, ExecutionConfig, DbtTaskGroup
 from cosmos.profiles import SnowflakeUserPasswordProfileMapping
 from airflow import settings
 from airflow.models import Connection
