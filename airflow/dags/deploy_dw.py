@@ -91,7 +91,7 @@ def setup_snowflake_connection():
 #                     dag_id="dbt_snowflake_dag_1")
 
 @dag(
-    schedule_interval="*/2 * * * *",
+    schedule_interval="* 9 * * 1-5",
     start_date=datetime(2023, 1, 1),
     catchup=False,
     dag_id="basic_cosmos_task_group"

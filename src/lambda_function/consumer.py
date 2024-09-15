@@ -4,7 +4,7 @@ import boto3
 from datetime import datetime
 
 s3_client = boto3.client('s3')
-bucket_name = 'stream-binance-from-ed'
+bucket_name = 'binance-codepipeline-deploy-ec2-dev'
 
 
 

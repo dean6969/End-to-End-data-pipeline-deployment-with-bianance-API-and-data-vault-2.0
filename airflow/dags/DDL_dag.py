@@ -77,7 +77,7 @@ def setup_snowflake_connection():
 
 # Define the DAG
 @dag(
-    schedule_interval="*/2 * * * *",
+    schedule_interval="* 8 * * 1-5",
     start_date=datetime(2023, 1, 1),
     catchup=False
 )

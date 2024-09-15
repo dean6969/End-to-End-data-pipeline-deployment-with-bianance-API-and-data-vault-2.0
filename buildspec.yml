@@ -10,7 +10,7 @@ phases:
 
   pre_build:
     commands:
-      - echo "Bắt đầu khởi tạo Terraform"
+      - echo "initializing Terraform"
       - terraform init
 
   build:
