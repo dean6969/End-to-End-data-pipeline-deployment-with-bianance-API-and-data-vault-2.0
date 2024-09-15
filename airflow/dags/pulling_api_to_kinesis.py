@@ -4,19 +4,8 @@ from datetime import datetime
 from pulling_current_price import pull_binance_current_price_data
 from pulling_price_line_item import pull_binance_price_line_item_data
 
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'start_date': datetime(2023, 1, 1),
-    'email': ['your_email@example.com'],
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
-
 dag = DAG(
-    schedule_interval="* 9 * * 1-5",
+    schedule_interval="* 7 * * 1-5",
     start_date=datetime(2023, 1, 1),
     catchup=False,
     dag_id="ETL_PIPELINE_DATA_MODELING"
