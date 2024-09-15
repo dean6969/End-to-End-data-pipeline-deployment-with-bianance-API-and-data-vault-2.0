@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: airflow
+  - source: /airflow
     destination: /home/ec2-user/app
 
 hooks:
