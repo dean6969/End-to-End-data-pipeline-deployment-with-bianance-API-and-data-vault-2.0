@@ -45,7 +45,7 @@ tickers = client.get_all_tickers()
 # Tạo danh sách chứa giá hiện tại của các cặp giao dịch
 
   # Thời gian hiện tại
-
+count = 0
 for ticker in tickers:
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     price_info = {
@@ -68,3 +68,6 @@ for ticker in tickers:
         print(e)
 
     sleep(1)
+    count += 1
+    if count == 20:
+        break
