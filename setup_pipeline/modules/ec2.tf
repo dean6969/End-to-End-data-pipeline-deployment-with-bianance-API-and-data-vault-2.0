@@ -1,7 +1,7 @@
 # Tạo EC2 Instance
 resource "aws_instance" "my_ec2" {
   ami           = "ami-0a5c3558529277641" # Thay bằng AMI phù hợp với vùng của bạn
-  instance_type = "t2.small"
+  instance_type = "t2.large"
 
   tags = {
     Name = "${var.project_name}-airflow-app-${var.env_name}"
@@ -100,5 +100,10 @@ resource "aws_iam_instance_profile" "my_ec2_role" {
 resource "aws_iam_role_policy_attachment" "ec2_secret_mananger_policy" {
   role       = aws_iam_role.my_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_s3r_policy" {
+  role       = aws_iam_role.my_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
