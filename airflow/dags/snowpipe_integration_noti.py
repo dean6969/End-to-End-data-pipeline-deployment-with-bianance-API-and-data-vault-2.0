@@ -6,12 +6,12 @@ import ast
 from botocore.exceptions import ClientError
 import json
 
-# Hàm lấy thông tin từ AWS Secrets Manager
+# get secret from aws secret manager
 def get_secret():
     secret_name = "snowflake_credential"
     region_name = "us-east-1"
 
-    # Tạo client cho Secrets Manager
+    # create a secret manager client
     session = boto3.session.Session()
     client = session.client(
         service_name='secretsmanager',
@@ -52,7 +52,7 @@ def get_sqs_arn():
 
     return sqs_arn
 
-# Hàm gắn ARN của SQS vào thông báo bucket S3
+# assign sqs to s3 bucket
 def attach_sqs_to_s3():
     s3_client = boto3.client('s3')
     bucket_name = "stream-binance-from-ed"
