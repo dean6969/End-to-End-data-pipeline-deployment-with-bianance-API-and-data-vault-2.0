@@ -1,14 +1,14 @@
 version: 0.0
 os: linux
 files:
-  - source: airflow
-    destination: /home/ec2-user/app
+  - source: /
+    destination: airflow
 
 hooks:
   BeforeInstall:
-    - location: /home/ec2-user/app/scripts/install_dependencies.sh
+    - location: scripts/install_dependencies.sh
       runas: root
 
   ApplicationStart:
-    - location: /home/ec2-user/app/scripts/start_docker.sh
+    - location: scripts/start_docker.sh
       runas: root
