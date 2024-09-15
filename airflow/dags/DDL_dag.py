@@ -15,7 +15,7 @@ from snowpipe_integration_noti import attach_sqs_to_s3
 def get_secret():
 
     secret_name = "snowflake_credential"
-    region_name = "us-east-1"
+    region_name = "ap-southeast-2"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
@@ -40,7 +40,7 @@ def get_secret():
 
 def get_aws_secret():
     secret_name = "aws_key"
-    region_name = "us-east-1"
+    region_name = "ap-southeast-2"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()

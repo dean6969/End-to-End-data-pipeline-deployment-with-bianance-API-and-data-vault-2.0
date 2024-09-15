@@ -12,7 +12,7 @@ from time import sleep, time
 def pull_data_price_line_item():
     # AWS Secrets Manager configuration
     secret_name = "binace_api"
-    region_name = "us-east-1"
+    region_name = "ap-southeast-2"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
@@ -31,7 +31,7 @@ def pull_data_price_line_item():
 
     # kinesis data stream
     stream_name = "stream_binance"
-    kinesis = boto3.client('kinesis', region_name='us-east-1')
+    kinesis = boto3.client('kinesis', region_name='ap-southeast-2')
 
 
     secret = ast.literal_eval(get_secret_value_response['SecretString'])

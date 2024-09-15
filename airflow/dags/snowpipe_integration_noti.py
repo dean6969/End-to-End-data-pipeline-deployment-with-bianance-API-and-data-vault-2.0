@@ -9,7 +9,7 @@ import json
 # get secret from aws secret manager
 def get_secret():
     secret_name = "snowflake_credential"
-    region_name = "us-east-1"
+    region_name = "ap-southeast-2"
 
     # create a secret manager client
     session = boto3.session.Session()

@@ -1,12 +1,12 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-southeast-2"
 }
 
 terraform {
   backend "s3" {
-    bucket = "terraform-state-chung1"
+    bucket = "terraform-state-chung2"
     key    = "state-file-key"
-    region = "us-east-1"
+    region = "ap-southeast-2"
   }
 }
 

@@ -18,7 +18,7 @@ from botocore.exceptions import ClientError
 def get_secret():
 
     secret_name = "snowflake_credential"
-    region_name = "us-east-1"
+    region_name = "ap-southeast-2"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
