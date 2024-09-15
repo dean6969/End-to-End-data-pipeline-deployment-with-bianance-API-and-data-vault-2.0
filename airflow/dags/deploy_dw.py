@@ -45,12 +45,30 @@ secret = get_secret()
 print(secret)
 
 
-profile_config = ProfileConfig(profile_name="dbtvault_snowflake_demo",
+profile_config_raw = ProfileConfig(profile_name="dbtvault_snowflake_demo",
                                target_name="dev",
                                profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test", 
                                                     profile_args={
-                                                        "database": "DV_TEST",
-                                                        "schema": "STAGE"
+                                                        "database": "binance_database_dev",
+                                                        "schema": "RAW",
+                                                        },
+                                                    ))
+
+profile_config_stg = ProfileConfig(profile_name="dbtvault_snowflake_demo",
+                               target_name="dev",
+                               profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test", 
+                                                    profile_args={
+                                                        "database": "binance_database_dev",
+                                                        "schema": "STAGING",
+                                                        },
+                                                    ))
+
+profile_config_silver = ProfileConfig(profile_name="dbtvault_snowflake_demo",
+                               target_name="dev",
+                               profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test", 
+                                                    profile_args={
+                                                        "database": "binance_database_dev",
+                                                        "schema": "SILVER",
                                                         },
                                                     ))
 
@@ -103,14 +121,30 @@ def basic_cosmos_task_group() -> None:
         python_callable=setup_snowflake_connection
     )
 
-    dbt_snowflake_dag = DbtTaskGroup(
-        group_id="snowflake_transform",
-        project_config=ProjectConfig("/opt/airflow/dags/dbt/dbttest"),
+    dbt_snowflake_dag_raw_stage = DbtTaskGroup(
+        group_id="Raw_stage",
+        project_config=ProjectConfig("/opt/airflow/dags/dbt/raw"),
         execution_config=ExecutionConfig(dbt_executable_path="./dbt_venv/bin/dbt",),
         operator_args={"install_deps": True},
-        profile_config=profile_config,
+        profile_config=profile_config_raw,
     )
 
-    setup_connection_task >> dbt_snowflake_dag
+    dbt_snowflake_dag_staging_stage = DbtTaskGroup(
+        group_id="Staging_stage",
+        project_config=ProjectConfig("/opt/airflow/dags/dbt/staging"),
+        execution_config=ExecutionConfig(dbt_executable_path="./dbt_venv/bin/dbt",),
+        operator_args={"install_deps": True},
+        profile_config=profile_config_stg,
+    )
+
+    dbt_snowflake_dag_silver_stage = DbtTaskGroup(
+        group_id="Silver_stage",
+        project_config=ProjectConfig("/opt/airflow/dags/dbt/silver"),
+        execution_config=ExecutionConfig(dbt_executable_path="./dbt_venv/bin/dbt",),
+        operator_args={"install_deps": True},
+        profile_config=profile_config_silver,
+    )
+
+    setup_connection_task >> dbt_snowflake_dag_raw_stage >> dbt_snowflake_dag_staging_stage >> dbt_snowflake_dag_silver_stage
 
 basic_cosmos_task_group()

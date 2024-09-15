@@ -6,6 +6,7 @@ from botocore.exceptions import ClientError
 import ast
 from binance.client import Client
 from time import sleep
+import uuid
 
 # AWS Secrets Manager configuration
 secret_name = "binace_api"
@@ -61,6 +62,7 @@ for symbol in symbols:
     # Process each kline entry
     for kline in klines:
         kline_info = {
+            'id': str(uuid.uuid4()),
             "symbol": symbol,
             "open_time": datetime.fromtimestamp(kline[0]/1000).isoformat(),
             "open_price": kline[1],
@@ -87,4 +89,4 @@ for symbol in symbols:
         except Exception as e:
             print(e)
 
-        sleep(6)
+        sleep(5)

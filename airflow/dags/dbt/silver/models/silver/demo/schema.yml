@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: STAGING_TABLE  # Tên nguồn bạn sẽ sử dụng trong SQL
+    database: BINANCE_DATABASE_DEV  # Tên database trong Snowflake
+    schema: STAGING  # Tên schema trong Snowflake
+    tables:
+      - name: STG_HASH_CURRENT_PRICE_SYMBOL  # Tên bảng
+      - name: STG_HASH_PRICE_LINE_ITEM_SYMBOL

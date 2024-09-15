@@ -2,6 +2,8 @@ USE WAREHOUSE binance_warehouse_dev;
 
 USE DATABASE binance_database_dev;
 
+
+
 CREATE SCHEMA IF NOT EXISTS RAW;
 
 CREATE SCHEMA IF NOT EXISTS STAGING;

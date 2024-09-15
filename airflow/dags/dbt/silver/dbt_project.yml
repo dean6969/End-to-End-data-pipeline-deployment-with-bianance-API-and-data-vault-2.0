@@ -1,0 +1,28 @@
+#Tên Project
+name: 'dbtvault_project'
+version: '0.1.0'
+require-dbt-version: ['>=1.0.0', '<2.0.0']
+config-version: 2
+
+# "profile" cấu hình db cho project này
+profile: 'default'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  #Code đã được biên dịch thành SQL
+clean-targets:         #Thử mục bị xóa khi chạy `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+models:
+  dbtvault_project:
+      silver:
+        tags:
+          - 'raw'
+        materialized: table

@@ -8,3 +8,5 @@ setup_pipeline/terraform.tfstate
 setup_pipeline/terraform.tfstate.backup
 functions/consumer.zip/
 logs
+
+airflow/dags/__pycache__

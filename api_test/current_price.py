@@ -6,6 +6,7 @@ from botocore.exceptions import ClientError
 import ast
 from binance.client import Client
 from time import sleep
+import uuid
 
 # AWS Secrets Manager configuration
 secret_name = "binace_api"
@@ -48,6 +49,7 @@ tickers = client.get_all_tickers()
 for ticker in tickers:
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     price_info = {
+        'id': str(uuid.uuid4()),
         'symbol': ticker['symbol'],
         'price': float(ticker['price']),
         'timestamp': timestamp  # Thời gian lấy giá

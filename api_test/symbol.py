@@ -1,12 +1,10 @@
-# Lấy tất cả các tham số hiện tại của thị trường
-import json
-from datetime import datetime
+import csv
 import logging
 import boto3
 from botocore.exceptions import ClientError
 import ast
 from binance.client import Client
-from time import sleep
+import uuid
 
 # AWS Secrets Manager configuration
 secret_name = "binace_api"
@@ -27,11 +25,6 @@ try:
 except ClientError as e:
     raise e
 
-# kinesis data stream
-stream_name = "stream_binance"
-kinesis = boto3.client('kinesis', region_name='us-east-1')
-
-
 secret = ast.literal_eval(get_secret_value_response['SecretString'])
 
 # Binance API credentials
@@ -48,25 +41,25 @@ logging.basicConfig(filename='binance_logs.log', level=logging.INFO,
 exchange_info = client.get_exchange_info()
 
 # Tạo danh sách chỉ chứa các trường thông tin về cặp giao dịch
+csv_data = []
+
+# Thêm tiêu đề cho CSV
+csv_data.append(['id', 'symbol', 'status', 'baseAsset', 'quoteAsset'])
 
 for symbol in exchange_info['symbols']:
-    records = {
-        'symbol': symbol['symbol'],
-        'status': symbol['status'],
-        'baseAsset': symbol['baseAsset'],
-        'quoteAsset': symbol['quoteAsset']
-    }
+    records = [
+        str(uuid.uuid4()),  # id (UUID)
+        symbol['symbol'],  # symbol
+        symbol['status'],  # status
+        symbol['baseAsset'],  # baseAsset
+        symbol['quoteAsset']  # quoteAsset
+    ]
+    
+    csv_data.append(records)
 
-    params = {
-        'Data': json.dumps(records),
-        'PartitionKey': 'symbol',
-        'StreamName': stream_name
-    }
+# Lưu tất cả các thông tin vào tệp CSV
+with open('binance_symbols.csv', 'w', newline='', encoding='utf-8') as csv_file:
+    writer = csv.writer(csv_file)
+    writer.writerows(csv_data)
 
-    try:
-        response = kinesis.put_record(**params)
-        print(response)
-    except Exception as e:
-        print(e)
-
-    sleep(7)
+print("Dữ liệu đã được lưu vào tệp binance_symbols.csv.")

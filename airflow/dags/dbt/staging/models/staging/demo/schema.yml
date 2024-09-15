@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: RAW_TABLE  # Tên nguồn bạn sẽ sử dụng trong SQL
+    database: BINANCE_DATABASE_DEV  # Tên database trong Snowflake
+    schema: RAW  # Tên schema trong Snowflake
+    tables:
+      - name: RAW_CURRENT_PRICE
+      - name: RAW_PRICE_LINE_ITEM
+      - name: RAW_SYMBOL
