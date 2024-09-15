@@ -1,9 +1,7 @@
-import os
 from airflow import settings
 from airflow.models import Connection
 from airflow.decorators import dag
 from airflow.operators.python import PythonOperator
-from snowflake import connector
 from datetime import datetime
 import boto3
 from botocore.exceptions import ClientError

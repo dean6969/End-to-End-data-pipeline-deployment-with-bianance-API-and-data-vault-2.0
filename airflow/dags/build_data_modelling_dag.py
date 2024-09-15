@@ -95,24 +95,11 @@ def setup_snowflake_connection():
         print(f"Connection '{conn_id}' already exists.")
     session.close()
 
-
-
-
-
-# dbt_snowflake_dag = DbtDag(project_config=ProjectConfig("/opt/airflow/dags/dbt/dbttest",),
-#                     operator_args={"install_deps": True},
-#                     profile_config=profile_config,
-#                     execution_config=ExecutionConfig(dbt_executable_path="./dbt_venv/bin/dbt",),
-#                     schedule_interval="@daily",
-#                     start_date=datetime(2023, 9, 6),
-#                     catchup=False,
-#                     dag_id="dbt_snowflake_dag_1")
-
 @dag(
     schedule_interval="* 9 * * 1-5",
     start_date=datetime(2023, 1, 1),
     catchup=False,
-    dag_id="basic_cosmos_task_group"
+    dag_id="ETL_PIPELINE_DATA_MODELING"
 )
 def basic_cosmos_task_group() -> None:
     # Task to set up Snowflake connection

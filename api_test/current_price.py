@@ -67,4 +67,4 @@ for ticker in tickers:
     except Exception as e:
         print(e)
 
-    sleep(5)
+    sleep(1)
