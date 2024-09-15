@@ -64,7 +64,7 @@ resource "aws_codepipeline" "codepipeline" {
 }
 
 resource "aws_s3_bucket" "codepipeline_bucket" {
-  bucket = "${var.project_name}-codepipeline-deploy-ec2-${var.env_name}"
+  bucket = "${var.project_name}-codepipeline-deploy-ec2-test-pipeline12-${var.env_name}"
   force_destroy = true
 }
 

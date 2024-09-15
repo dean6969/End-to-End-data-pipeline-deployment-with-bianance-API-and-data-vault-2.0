@@ -4,7 +4,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "terraform-state-chung2"
+    bucket = "state-tf-chung"
     key    = "state-file-key"
     region = "ap-southeast-2"
   }

@@ -55,7 +55,7 @@ def get_sqs_arn():
 # assign sqs to s3 bucket
 def attach_sqs_to_s3():
     s3_client = boto3.client('s3')
-    bucket_name = "stream-binance-from-ed"
+    bucket_name = "stream-binance-from-ed-4"
 
     # Lấy cấu hình thông báo hiện tại của S3
     s3_noti = s3_client.get_bucket_notification_configuration(Bucket=bucket_name)
