@@ -83,190 +83,48 @@ def setup_snowflake_connection():
 )
 def snowflake_setup_dag():
 
-    setup_snowflake_connection_task = PythonOperator(
-        task_id='setup_snowflake_connection',
-        python_callable=setup_snowflake_connection
-    )
-######################################################### WAREHOUSE SNOWFLAKE #########################################################
-    warehouse_sql = """
-    CREATE WAREHOUSE IF NOT EXISTS binance_warehouse_dev
-    WITH WAREHOUSE_SIZE = 'LARGE'
-    MIN_CLUSTER_COUNT = 1
-    MAX_CLUSTER_COUNT = 10
-    AUTO_SUSPEND = 300
-    AUTO_RESUME = TRUE
-    INITIALLY_SUSPENDED = TRUE;
-    """
+    with open("ddl_scripts/ddl_datawarehouse.sql", 'r') as file:
+        create_warehouse = file.read()
 
+    with open("ddl_scripts/ddl_database.sql", 'r') as file:
+        create_database = file.read()
+    
+    with open("ddl_scripts/ddl_schema.sql", 'r') as file:
+        create_schema = file.read()
 
-    # Task to create the warehouse
+    with open("ddl_scripts/ddl_table.sql", 'r') as file:
+        create_table = file.read()
+
     create_warehouse_task = SnowflakeOperator(
         task_id="create_warehouse",
-        snowflake_conn_id="sf_test",  # Connection ID set in Airflow
-        sql=warehouse_sql
+        snowflake_conn_id="sf_test",
+        sql=create_warehouse
     )
-######################################################### DATABASE SNOWFLAKE #########################################################
-    database_sql = """
-    USE WAREHOUSE binance_warehouse_dev;
 
-    CREATE DATABASE IF NOT EXISTS binance_database_dev;
-
-    """
-
-    # Task to create the database
     create_database_task = SnowflakeOperator(
         task_id="create_database",
         snowflake_conn_id="sf_test",
-        sql=database_sql
+        sql=create_database
     )
-######################################################### SCHEMA SNOWFLAKE #########################################################  
 
-    raw_schema_sql = """
-    USE WAREHOUSE binance_warehouse_dev;
-
-    USE DATABASE binance_database_dev;
-
-    CREATE SCHEMA IF NOT EXISTS raw;
-    """
-    staging_schema_sql = """
-    USE WAREHOUSE binance_warehouse_dev;
-
-    USE DATABASE binance_database_dev;
-
-    CREATE SCHEMA IF NOT EXISTS staging;
-    """
-    silver_schema_sql = """
-    USE WAREHOUSE binance_warehouse_dev;
-
-    USE DATABASE binance_database_dev;
-
-    CREATE SCHEMA IF NOT EXISTS silver;
-    """
-    gold_schema_sql = """
-    USE WAREHOUSE binance_warehouse_dev;
-
-    USE DATABASE binance_database_dev;
-
-    CREATE SCHEMA IF NOT EXISTS gold;
-    """
-    # Task to create raw schema
-    create_raw_schema_task = SnowflakeOperator(
-        task_id="create_raw_schema",
+    create_schema_task = SnowflakeOperator(
+        task_id="create_schema",
         snowflake_conn_id="sf_test",
-        sql=raw_schema_sql
+        sql=create_schema
     )
-    
-    # Task to create staging schema
-    create_staging_schema_task = SnowflakeOperator(
-        task_id="create_staging_schema",
+
+    create_table_task = SnowflakeOperator(
+        task_id="create_table",
         snowflake_conn_id="sf_test",
-        sql=staging_schema_sql
-    )
-    
-    # Task to create silver schema
-    create_silver_schema_task = SnowflakeOperator(
-        task_id="create_silver_schema",
-        snowflake_conn_id="sf_test",
-        sql=silver_schema_sql
-    )
-    
-    # Task to create gold schema
-    create_gold_schema_task = SnowflakeOperator(
-        task_id="create_gold_schema",
-        snowflake_conn_id="sf_test",
-        sql=gold_schema_sql
-    )
-######################################################### RAW TABLE SNOWFLAKE #########################################################
-    raw_symbol = """
-
-    USE DATABASE binance_database_dev;
-
-    CREATE TABLE IF NOT EXISTS raw_symbol_data (
-        symbol VARCHAR(255),
-        status VARCHAR(50),
-        baseAsset VARCHAR(255),
-        quoteAsset VARCHAR(255),
-        load_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    """
-
-    raw_price_line_item = """
-    USE DATABASE binance_database_dev;
-
-    CREATE TABLE IF NOT EXISTS raw_price_line_item_data (
-        symbol VARCHAR(255),
-        open_time TIMESTAMP,
-        open_price DECIMAL(18, 6),
-        high_price DECIMAL(18, 6),
-        low_price DECIMAL(18, 6),
-        close_price DECIMAL(18, 6),
-        volume DECIMAL(18, 6),
-        close_time TIMESTAMP,
-        quote_asset_volume DECIMAL(18, 6),
-        number_of_trades INT,
-        taker_buy_base_asset_volume DECIMAL(18, 6),
-        taker_buy_quote_asset_volume DECIMAL(18, 6),
-        load_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    """
-
-    raw_current_price = """
-    USE DATABASE binance_database_dev;
-
-    CREATE TABLE IF NOT EXISTS raw_current_price_data (
-        symbol VARCHAR(255),
-        price DECIMAL(18, 6),
-        timestamp TIMESTAMP,
-        load_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    """
-
-    create_raw_symbol_task = SnowflakeOperator(
-        task_id="create_raw_symbol",
-        snowflake_conn_id="sf_test",
-        sql=raw_symbol
+        sql=create_table
     )
 
-    create_raw_price_line_item_task = SnowflakeOperator(
-        task_id="create_raw_price_line_item",
-        snowflake_conn_id="sf_test",
-        sql=raw_price_line_item
-    )
 
-    create_raw_current_price_task = SnowflakeOperator(
-        task_id="create_raw_current_price",
-        snowflake_conn_id="sf_test",
-        sql=raw_current_price
-    )
 
-    trigger_dag2 = TriggerDagRunOperator(
-        task_id='trigger_deploy_dw',
-        trigger_dag_id='basic_cosmos_task_group',
-        wait_for_completion=True,
-        reset_dag_run=True # Tên của DAG thứ hai
-    )
-
-######################################################### EXTERNAL STAGE #########################################################
 
     
     # Task dependencies: warehouse -> database -> schemas -> tables
-    setup_snowflake_connection_task >> create_warehouse_task >> create_database_task >> create_raw_schema_task 
-
-    create_database_task >> create_staging_schema_task 
-
-    create_database_task >> create_silver_schema_task 
-
-    create_database_task >> create_gold_schema_task
-
-    create_raw_schema_task >> create_raw_symbol_task
-
-    create_raw_schema_task >> create_raw_price_line_item_task
-
-    create_raw_schema_task >> create_raw_current_price_task
-
-    create_raw_symbol_task >> trigger_dag2
-    create_raw_price_line_item_task >> trigger_dag2
-    create_raw_current_price_task >> trigger_dag2
+    setup_snowflake_connection_task >> create_warehouse_task >> create_database_task >> create_schema_task >> create_table_task
 
 # Instantiate the DAG
 snowflake_setup_dag = snowflake_setup_dag()
