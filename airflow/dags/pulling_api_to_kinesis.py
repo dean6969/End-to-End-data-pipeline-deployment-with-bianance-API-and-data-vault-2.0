@@ -2,7 +2,7 @@ from airflow.decorators import dag
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
 from pulling_current_price import pull_binance_current_price_data
-from pulling_price_line_item import pull_binance_price_line_item_data
+from pulling_price_line_item import pull_data_price_line_item
 from airflow.operators.dummy_operator import DummyOperator
 
 @dag(
@@ -24,7 +24,7 @@ def pulling_api_to_kinesis():
 
     t2 = PythonOperator(
         task_id='pull_price_line_item',
-        python_callable=pull_binance_price_line_item_data,
+        python_callable=pull_data_price_line_item,
     )
 
     t0 >> t1 
