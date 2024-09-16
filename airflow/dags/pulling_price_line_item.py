@@ -94,7 +94,8 @@ def pull_data_price_line_item():
 
             sleep(1)
 
-            count+=1
+        count+=1
+        print(count)
 
-            if count == 20:
-                break
+        if count == 10:
+            break

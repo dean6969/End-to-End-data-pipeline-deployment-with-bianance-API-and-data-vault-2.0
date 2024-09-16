@@ -6,7 +6,8 @@ setup_pipeline/.terraform/
 setup_pipeline/.terraform.lock.hcl
 setup_pipeline/terraform.tfstate
 setup_pipeline/terraform.tfstate.backup
-functions/consumer.zip/
+
 logs
 
 airflow/dags/__pycache__
+src/lambda_function/consumer.zip

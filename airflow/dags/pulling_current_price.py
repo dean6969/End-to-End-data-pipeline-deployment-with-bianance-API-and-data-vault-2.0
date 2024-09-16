@@ -63,11 +63,11 @@ def pull_binance_current_price_data():
 
         try:
             response = kinesis.put_record(**params)
-            print(response)
         except Exception as e:
             print(e)
 
         sleep(1)
         count += 1
-        if count == 20:
+        print(count)
+        if count == 10:
             break
