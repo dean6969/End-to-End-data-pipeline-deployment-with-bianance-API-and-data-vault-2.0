@@ -68,7 +68,7 @@ resource "aws_iam_role_policy" "glue_crawler_policy" {
       {
 
         Action = [
-          "glue:*"  # Cấp quyền đầy đủ cho Glue
+          "glue:*"  
         ],
         Effect = "Allow",
         Resource = "*"

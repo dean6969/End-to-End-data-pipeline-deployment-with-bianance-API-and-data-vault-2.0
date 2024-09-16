@@ -44,20 +44,20 @@ resource "aws_security_group" "ec2_sg" {
   name        = "${var.project_name}-airflow-sg-${var.env_name}"
   description = "Block all inbound traffic and allow only SSM outbound traffic"
 
-   # Mở tất cả inbound traffic (từ bất kỳ đâu)
+   
   ingress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"  # Cho phép tất cả các giao thức
-    cidr_blocks = ["0.0.0.0/0"]  # Cho phép từ bất kỳ địa chỉ IP nào
+    protocol    = "-1"  
+    cidr_blocks = ["0.0.0.0/0"]  
   }
 
-  # Mở tất cả outbound traffic (tới bất kỳ đâu)
+  
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"  # Cho phép tất cả các giao thức
-    cidr_blocks = ["0.0.0.0/0"]  # Cho phép tới bất kỳ địa chỉ IP nào
+    protocol    = "-1"  
+    cidr_blocks = ["0.0.0.0/0"]  
   }
 
   tags = {
@@ -65,7 +65,7 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
-# Tạo IAM Role cho EC2 để sử dụng với CodeDeploy
+
 resource "aws_iam_role" "my_ec2_role" {
   name = "${var.project_name}-ec2_role-${var.env_name}"
 
@@ -91,7 +91,7 @@ resource "aws_iam_role_policy_attachment" "ec2_session_mananger_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# Tạo Instance Profile để gán IAM Role cho EC2
+
 resource "aws_iam_instance_profile" "my_ec2_role" {
   name = "${var.project_name}-instance_profile-${var.env_name}"
   role = aws_iam_role.my_ec2_role.name
@@ -118,12 +118,12 @@ resource "aws_iam_policy" "kinesis_put_record_policy" {
         "kinesis:PutRecord",
         "kinesis:PutRecords"
       ],
-      Resource = "*"  # Replace with specific ARN of the Kinesis stream if needed
+      Resource = "*"  
     }]
   })
 }
 
-# Step 3: Attach Policy to the Role
+
 resource "aws_iam_role_policy_attachment" "attach_policy" {
   role       = aws_iam_role.my_ec2_role.name
   policy_arn = aws_iam_policy.kinesis_put_record_policy.arn
