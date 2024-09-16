@@ -9,3 +9,7 @@ variable project_name {
   type        = string
   default = "binance"
 }
+
+variable "aws_region" {
+  default = "ap-southeast-2"
+}

@@ -85,3 +85,21 @@ resource "aws_iam_role_policy_attachment" "codebuild_lambda_policy_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
 }
+
+# attach policy for codebuild to access lambda
+resource "aws_iam_role_policy_attachment" "Glue_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+}
+
+# attach policy for codebuild to access lambda
+resource "aws_iam_role_policy_attachment" "Athena_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonAthenaFullAccess"
+}
+
+# attach policy for codebuild to access lambda
+resource "aws_iam_role_policy_attachment" "cloudwatch_policy_attach" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
