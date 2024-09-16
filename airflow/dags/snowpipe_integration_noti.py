@@ -6,6 +6,7 @@ import ast
 from botocore.exceptions import ClientError
 import json
 
+
 # get secret from aws secret manager
 def get_secret():
     secret_name = "snowflake_credential"
@@ -25,6 +26,7 @@ def get_secret():
 
     secret = ast.literal_eval(get_secret_value_response['SecretString'])
     return secret
+
 
 # get arn of sqs snowpipe
 def get_sqs_arn():
@@ -46,11 +48,12 @@ def get_sqs_arn():
     """
     df = pd.read_sql(query, conn)['PIPE_STATUS'][0]
 
-    sqs_arn =json.loads(df)['notificationChannelName']
+    sqs_arn = json.loads(df)['notificationChannelName']
 
     conn.close()
 
     return sqs_arn
+
 
 # assign sqs to s3 bucket
 def attach_sqs_to_s3():
@@ -68,7 +71,7 @@ def attach_sqs_to_s3():
         else:
             print("Start to put SQS notification configuration")
             s3_client.put_bucket_notification_configuration(
-                Bucket=bucket_name, 
+                Bucket=bucket_name,
                 NotificationConfiguration={
                     'QueueConfigurations': [
                         {

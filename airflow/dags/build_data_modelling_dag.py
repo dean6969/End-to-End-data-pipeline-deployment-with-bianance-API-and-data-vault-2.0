@@ -1,5 +1,5 @@
 from datetime import datetime
-from cosmos import  ProjectConfig, ProfileConfig, ExecutionConfig, DbtTaskGroup
+from cosmos import ProjectConfig, ProfileConfig, ExecutionConfig, DbtTaskGroup
 from cosmos.profiles import SnowflakeUserPasswordProfileMapping
 from airflow import settings
 from airflow.models import Connection
@@ -39,45 +39,48 @@ def get_secret():
     secret = ast.literal_eval(get_secret_value_response['SecretString'])
 
     return secret
+
+
 secret = get_secret()
 
 print(secret)
 
-
+# Define the profile configurations for raw, staging, and silver stages
 profile_config_raw = ProfileConfig(profile_name="dbtvault_snowflake_demo",
-                               target_name="dev",
-                               profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test", 
-                                                    profile_args={
-                                                        "database": "binance_database_dev",
-                                                        "schema": "RAW",
-                                                        },
-                                                    ))
+                                    target_name="dev",
+                                    profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test",
+                                    profile_args={
+                                        "database": "binance_database_dev",
+                                        "schema": "RAW",
+                                        },
+                                    ))
 
 profile_config_stg = ProfileConfig(profile_name="dbtvault_snowflake_demo",
-                               target_name="dev",
-                               profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test", 
-                                                    profile_args={
-                                                        "database": "binance_database_dev",
-                                                        "schema": "STAGING",
-                                                        },
-                                                    ))
+                                    target_name="dev",
+                                    profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test",
+                                    profile_args={
+                                        "database": "binance_database_dev",
+                                        "schema": "STAGING",
+                                        },
+                                    ))
 
 profile_config_silver = ProfileConfig(profile_name="dbtvault_snowflake_demo",
-                               target_name="dev",
-                               profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test", 
-                                                    profile_args={
-                                                        "database": "binance_database_dev",
-                                                        "schema": "SILVER",
-                                                        },
-                                                    ))
+                                    target_name="dev",
+                                    profile_mapping=SnowflakeUserPasswordProfileMapping(conn_id="sf_test",
+                                    profile_args={
+                                        "database": "binance_database_dev",
+                                        "schema": "SILVER",
+                                        },
+                                    ))
 
 
+# Define the function to set up the Snowflake connection
 def setup_snowflake_connection():
     # Check if the connection already exists
     conn_id = "sf_test"
     session = settings.Session()
     existing_conn = session.query(Connection).filter(Connection.conn_id == conn_id).first()
-    
+
     if not existing_conn:
         # If the connection does not exist, create it
         conn = Connection(
@@ -85,7 +88,7 @@ def setup_snowflake_connection():
             conn_type=secret['conn_type'],
             login=secret['login'],
             password=secret['password'],
-            extra={"account": secret['account'],"role": secret['role']}
+            extra={"account": secret['account'], "role": secret['role']}
         )
         session.add(conn)
         session.commit()
@@ -93,6 +96,7 @@ def setup_snowflake_connection():
     else:
         print(f"Connection '{conn_id}' already exists.")
     session.close()
+
 
 @dag(
     schedule_interval="* 10 * * 1-5",
@@ -131,6 +135,9 @@ def basic_cosmos_task_group() -> None:
         profile_config=profile_config_silver,
     )
 
-    setup_connection_task >> dbt_snowflake_dag_raw_stage >> dbt_snowflake_dag_staging_stage >> dbt_snowflake_dag_silver_stage
+    setup_connection_task >> dbt_snowflake_dag_raw_stage >> dbt_snowflake_dag_staging_stage
+
+    dbt_snowflake_dag_staging_stage >> dbt_snowflake_dag_silver_stage
+
 
 basic_cosmos_task_group()

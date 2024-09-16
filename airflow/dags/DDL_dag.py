@@ -12,6 +12,7 @@ from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
 from datetime import datetime
 from snowpipe_integration_noti import attach_sqs_to_s3
 
+
 def get_secret():
 
     secret_name = "snowflake_credential"
@@ -62,7 +63,7 @@ def get_aws_secret():
 
     return secret
 
-##
+
 secret = get_secret()
 aws_secret = get_aws_secret()
 
@@ -73,7 +74,7 @@ def setup_snowflake_connection():
     conn_id = "sf_test"
     session = settings.Session()
     existing_conn = session.query(Connection).filter(Connection.conn_id == conn_id).first()
-    
+
     if not existing_conn:
         # If the connection does not exist, create it
         conn = Connection(
@@ -81,7 +82,7 @@ def setup_snowflake_connection():
             conn_type=secret['conn_type'],
             login=secret['login'],
             password=secret['password'],
-            extra={"account": secret['account'],"role": secret['role']}
+            extra={"account": secret['account'], "role": secret['role']}
         )
         session.add(conn)
         session.commit()
@@ -89,6 +90,7 @@ def setup_snowflake_connection():
     else:
         print(f"Connection '{conn_id}' already exists.")
     session.close()
+
 
 ###################################### SETUP DAG ########################################
 @dag(
@@ -110,7 +112,7 @@ def snowflake_setup_dag():
 
     with open("/opt/airflow/dags/ddl_scripts/ddl_database.sql", 'r') as file:
         create_database = file.read()
-    
+
     with open("/opt/airflow/dags/ddl_scripts/ddl_schema.sql", 'r') as file:
         create_schema = file.read()
 
@@ -177,12 +179,13 @@ def snowflake_setup_dag():
         python_callable=attach_sqs_to_s3
     )
 
-
-    
     # Task dependencies: warehouse -> database -> schemas -> tables
-    setup_snowflake_connection_task >> create_warehouse_task >> create_database_task >> create_schema_task >> create_table_task
+    setup_snowflake_connection_task >> create_warehouse_task >> create_database_task
+
+    create_database_task >> create_schema_task >> create_table_task
 
     create_table_task >> create_external_stage_task >> create_snowpipe_task >> setup_snowpipe_notification_task
+
 
 # Instantiate the DAG
 snowflake_setup_dag = snowflake_setup_dag()

@@ -7,6 +7,7 @@ from botocore.exceptions import ClientError
 from binance.client import Client
 import ast
 
+
 def pull_binance_current_price_data():
     # AWS Secrets Manager configuration
     secret_name = "binace_api"
@@ -56,10 +57,10 @@ def pull_binance_current_price_data():
         }
 
         params = {
-                'Data': json.dumps(price_info),
-                'PartitionKey': 'current_price',
-                'StreamName': stream_name
-                }
+            'Data': json.dumps(price_info),
+            'PartitionKey': 'current_price',
+            'StreamName': stream_name
+            }
 
         try:
             response = kinesis.put_record(**params)

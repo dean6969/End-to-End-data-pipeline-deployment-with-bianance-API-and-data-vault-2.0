@@ -1,15 +1,16 @@
-# Tạo ứng dụng CodeDeploy
+# create a CodeDeploy application and deployment group
 resource "aws_codedeploy_app" "my_app" {
   name = "${var.project_name}-deploy-airflow-${var.env_name}"
 }
 
-# Tạo Deployment Group cho CodeDeploy
+# create deployment group
 resource "aws_codedeploy_deployment_group" "my_deployment_group" {
   app_name              = aws_codedeploy_app.my_app.name
   deployment_group_name = "${var.project_name}-DeploymentGroup-${var.env_name}"
   service_role_arn      = aws_iam_role.codedeploy_role.arn
   deployment_config_name = "CodeDeployDefault.AllAtOnce"
 
+  # EC2 tag filter
   ec2_tag_set {
     ec2_tag_filter {
       key   = "Name"
@@ -24,7 +25,7 @@ resource "aws_codedeploy_deployment_group" "my_deployment_group" {
   }
 }
 
-# Tạo IAM Role cho CodeDeploy
+# create IAM role for CodeDeploy
 resource "aws_iam_role" "codedeploy_role" {
   name = "${var.project_name}-codedeploy-role-${var.env_name}"
 

@@ -7,7 +7,6 @@ s3_client = boto3.client('s3')
 bucket_name = 'stream-binance-from-ed-test1'
 
 
-
 def lambda_handler(event, context):
     records = event['Records']
 
@@ -20,7 +19,7 @@ def lambda_handler(event, context):
 
     for record in records:
         data = record['kinesis']['data']
-        
+
         decoded_data = base64.b64decode(data).decode('utf-8')
 
         print(record['kinesis'])
@@ -42,7 +41,7 @@ def lambda_handler(event, context):
             print(True)
         else:
             print(False)
-        
+
         if partition_key == 'price_line_item':
             price_line_item_data.append(parsed_data)
 
@@ -63,15 +62,13 @@ def lambda_handler(event, context):
             except Exception as e:
                 print(f"Error uploading {filename}: {e}")
 
-    
-
     # Upload data for each partition key to its respective folder if the list is not empty
     if current_price_data:
         upload_to_s3(current_price_data, 'landing_file/current_price', 'current_price')
-        
+
     if price_line_item_data:
         upload_to_s3(price_line_item_data, 'landing_file/price_line_item', 'price_line_item')
-        
+
     if symbol_data:
         upload_to_s3(symbol_data, 'landing_file/symbol', 'symbol')
 

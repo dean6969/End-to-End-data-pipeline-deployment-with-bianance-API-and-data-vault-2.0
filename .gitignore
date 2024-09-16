@@ -11,3 +11,4 @@ logs
 
 airflow/dags/__pycache__
 src/lambda_function/consumer.zip
+pycodestyle

@@ -36,7 +36,7 @@ resource "aws_iam_role" "codebuild_role" {
   })
 }
 
-# Gắn chính sách cho CodeBuild để có quyền truy cập vào các dịch vụ AWS
+# attach policy to codebuild role
 resource "aws_iam_role_policy_attachment" "codebuild_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
@@ -62,22 +62,25 @@ resource "aws_iam_role_policy" "codebuild_logs_policy" {
   })
 }
 
-# Gắn chính sách cho CodeBuild để có quyền truy cập IAM, Kinesis và Lambda
+# attach policy for codebuild to access kinesis
 resource "aws_iam_role_policy_attachment" "codebuild_kinesis_policy_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonKinesisFullAccess"
 }
 
+# attach policy for codebuild to access lambda and cloudwatch
 resource "aws_iam_role_policy_attachment" "codebuild_policy_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# attach policy for codebuild to access IAM role
 resource "aws_iam_role_policy_attachment" "codebuild_IAM_access" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
 }
 
+# attach policy for codebuild to access lambda
 resource "aws_iam_role_policy_attachment" "codebuild_lambda_policy_attach" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"

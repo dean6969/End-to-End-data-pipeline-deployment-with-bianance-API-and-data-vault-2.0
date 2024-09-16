@@ -14,6 +14,10 @@ def pull_data_price_line_item():
     secret_name = "binace_api"
     region_name = "ap-southeast-2"
 
+    # kinesis data stream
+    stream_name = "stream_binance"
+    kinesis = boto3.client('kinesis', region_name='ap-southeast-2')
+
     # Create a Secrets Manager client
     session = boto3.session.Session()
     secrets_client = session.client(
@@ -29,11 +33,6 @@ def pull_data_price_line_item():
     except ClientError as e:
         raise e
 
-    # kinesis data stream
-    stream_name = "stream_binance"
-    kinesis = boto3.client('kinesis', region_name='ap-southeast-2')
-
-
     secret = ast.literal_eval(get_secret_value_response['SecretString'])
 
     # Binance API credentials
@@ -47,14 +46,9 @@ def pull_data_price_line_item():
     logging.basicConfig(filename='binance_logs.log', level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
-
-
     # Fetch exchange information (symbols and assets)
     exchange_info = client.get_exchange_info()
     symbols = [symbol['symbol'] for symbol in exchange_info['symbols']]
-
-    # Define the structure for JSON output
-    all_klines_json = []
 
     count = 0
     # Loop over symbols and fetch kline data for each
@@ -62,28 +56,27 @@ def pull_data_price_line_item():
         # Fetch the most recent 1-minute kline for the symbol
         klines = client.get_klines(symbol=symbol, interval=Client.KLINE_INTERVAL_1DAY, limit=1)
 
-        # Process each kline entry
-        for kline in klines:
+        for kline in klines:  # Process each kline entry
             kline_info = {
                 'id': str(uuid.uuid4()),
                 "symbol": symbol,
-                "open_time": datetime.fromtimestamp(kline[0]/1000).isoformat(),
+                "open_time": datetime.fromtimestamp(kline[0] / 1000).isoformat(),
                 "open_price": kline[1],
                 "high_price": kline[2],
                 "low_price": kline[3],
                 "close_price": kline[4],
                 "volume": kline[5],
-                "close_time": datetime.fromtimestamp(kline[6]/1000).isoformat(),
+                "close_time": datetime.fromtimestamp(kline[6] / 1000).isoformat(),
                 "quote_asset_volume": kline[7],
                 "number_of_trades": kline[8],
                 "taker_buy_base_asset_volume": kline[9],
                 "taker_buy_quote_asset_volume": kline[10],
             }
-            
+
             params = {
-            'Data': json.dumps(kline_info),
-            'PartitionKey': 'price_line_item',
-            'StreamName': stream_name
+                'Data': json.dumps(kline_info),
+                'PartitionKey': 'price_line_item',
+                'StreamName': stream_name
             }
 
             try:
@@ -94,7 +87,7 @@ def pull_data_price_line_item():
 
             sleep(1)
 
-        count+=1
+        count += 1
         print(count)
 
         if count == 10:

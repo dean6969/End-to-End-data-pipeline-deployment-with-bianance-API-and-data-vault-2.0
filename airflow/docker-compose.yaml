@@ -14,7 +14,6 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__CORE__TEST_CONNECTION: 'enabled'
-    AIRFLOW_CONN_SNOWFLAKE: 'snowflake://mankay1805:CHungpro$$12@/STAGE?account=EDDTNTH-YJ64905&database=DEV_TEST&warehouse=COMPUTE_WH&role=ACCOUNTADMIN'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server

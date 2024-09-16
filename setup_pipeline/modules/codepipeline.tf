@@ -1,3 +1,4 @@
+# create a CodePipeline
 resource "aws_codepipeline" "codepipeline" {
   name     = "${var.project_name}-tf-test-pipeline-${var.env_name}"
   role_arn = aws_iam_role.codepipeline_role.arn
@@ -7,6 +8,7 @@ resource "aws_codepipeline" "codepipeline" {
     type     = "S3"
   }
 
+  # build stage to trigger github for version control
   stage {
     name = "Source"
 
@@ -26,6 +28,7 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
 
+  # build stage to trigger codebuild
   stage {
     name = "Build"
 
@@ -44,6 +47,7 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
 
+  # deploy stage to trigger codedeploy
   stage {
     name = "Deploy"
 
@@ -63,6 +67,7 @@ resource "aws_codepipeline" "codepipeline" {
   }
 }
 
+# create a S3 bucket for CodePipeline
 resource "aws_s3_bucket" "codepipeline_bucket" {
   bucket = "${var.project_name}-codepipeline-deploy-ec2-test-pipeline12-${var.env_name}"
   force_destroy = true
