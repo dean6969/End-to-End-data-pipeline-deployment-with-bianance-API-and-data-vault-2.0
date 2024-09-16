@@ -107,3 +107,24 @@ resource "aws_iam_role_policy_attachment" "ec2_s3r_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
+resource "aws_iam_policy" "kinesis_put_record_policy" {
+  name        = "KinesisPutRecordPolicy"
+  description = "Allows EC2 to put records into a Kinesis stream"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect = "Allow",
+      Action = [
+        "kinesis:PutRecord",
+        "kinesis:PutRecords"
+      ],
+      Resource = "*"  # Replace with specific ARN of the Kinesis stream if needed
+    }]
+  })
+}
+
+# Step 3: Attach Policy to the Role
+resource "aws_iam_role_policy_attachment" "attach_policy" {
+  role       = aws_iam_role.my_ec2_role.name
+  policy_arn = aws_iam_policy.kinesis_put_record_policy.arn
+}
