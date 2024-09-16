@@ -1,3 +1,4 @@
+
 # Project Data Pipeline
 
 ## Introduction
@@ -32,3 +33,22 @@ This project utilizes AWS Lambda, AWS Kinesis, and AWS CodeDeploy, orchestrated 
    ./setup_pipeline.sh
    ```
 
+2. **Data Architecture:**
+
+   The pipeline follows a **Data Vault 2.0** methodology to ensure scalability, historical tracking, and normalization of the data. Below is an overview of the Data Vault 2.0 architecture employed in the project:
+
+   ![Data Vault 2.0 Architecture](architecture/data_vault_2.0.png)
+
+3. **ETL Pipeline:**
+
+   The pipeline includes a structured ETL process, extracting data from Binance API, transforming it, and loading it into the data warehouse for analytics. The architecture is as follows:
+
+   ![ETL Pipeline Architecture](architecture/ETL_architecture.png)
+
+4. **Remove Resources:**
+
+   To remove resources and clean up the environment after use, execute the following script:
+
+   ```bash
+   ./destroy_resource.sh
+   ```
