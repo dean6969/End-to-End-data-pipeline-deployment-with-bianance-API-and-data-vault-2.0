@@ -6,7 +6,7 @@ from pulling_price_line_item import pull_data_price_line_item
 from airflow.operators.dummy_operator import DummyOperator
 
 @dag(
-    schedule_interval="* 8 * * 1-5",
+    schedule_interval="* 9 * * 1-5",
     start_date=datetime(2023, 1, 1),
     catchup=False
 )

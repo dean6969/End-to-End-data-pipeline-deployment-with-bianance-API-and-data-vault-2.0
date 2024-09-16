@@ -95,7 +95,7 @@ def setup_snowflake_connection():
     session.close()
 
 @dag(
-    schedule_interval="* 9 * * 1-5",
+    schedule_interval="* 10 * * 1-5",
     start_date=datetime(2023, 1, 1),
     catchup=False,
     dag_id="ETL_PIPELINE_DATA_MODELING"
