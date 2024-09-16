@@ -25,4 +25,4 @@ models:
       silver:
         tags:
           - 'raw'
-        materialized: table
+        materialized: incremental

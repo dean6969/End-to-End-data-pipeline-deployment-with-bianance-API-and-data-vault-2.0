@@ -1,8 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key='hk_symbol'
-) }}
-
 WITH combined_symbol_data AS (
     SELECT 
         hk_symbol 

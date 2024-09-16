@@ -1,7 +1,3 @@
-{{ config(
-    materialized='incremental'
-) }}
-
 SELECT
     cp.hk_symbol,
     cp.hk_current_price,

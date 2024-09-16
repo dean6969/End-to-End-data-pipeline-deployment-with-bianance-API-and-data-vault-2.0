@@ -7,11 +7,11 @@ symbol AS (
     FROM {{ source('RAW_TABLE', 'RAW_SYMBOL') }}
 )
 SELECT 
-    -- Thêm hash key cho price_line_item và symbol sử dụng MD5
-    MD5(pli.symbol) AS hk_symbol,  -- Hash key cho symbol bằng MD5
-    MD5(CONCAT(pli.symbol, pli.open_time, pli.close_time)) AS hk_price_line_item,  -- Hash key cho price_line_item dựa trên nhiều cột
+    -- add hash key for symbol
+    MD5(pli.symbol) AS hk_symbol,  
+    MD5(CONCAT(pli.symbol, pli.open_time, pli.close_time)) AS hk_price_line_item,  -- create hash key for price_line_item
     
-    -- Các cột từ price_line_item
+    -- columns from price_line_item
     pli.id,
     pli.symbol,
     pli.open_time,
@@ -27,7 +27,7 @@ SELECT
     pli.taker_buy_quote_asset_volume,
     pli.load_datetime,
     
-    -- Các cột từ symbol
+    -- columns from symbol
     s.id AS symbol_id,
     s.symbol AS symbol_symbol,
     s.status,

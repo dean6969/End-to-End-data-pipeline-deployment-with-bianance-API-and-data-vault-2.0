@@ -13,6 +13,8 @@ from datetime import datetime
 from snowpipe_integration_noti import attach_sqs_to_s3
 
 
+bucket_name = "stream-binance-from-ed-test1"
+
 def get_secret():
 
     secret_name = "snowflake_credential"
@@ -153,7 +155,7 @@ def snowflake_setup_dag():
     USE SCHEMA RAW;
 
     CREATE OR REPLACE STAGE s3_json_stage
-    URL = 's3://stream-binance-from-ed-test1/'
+    URL = 's3://{bucket_name}/'
     CREDENTIALS = (AWS_KEY_ID = '{aws_secret['access_key_id']}' AWS_SECRET_KEY = '{aws_secret['secret_key_id']}')
     FILE_FORMAT = (TYPE = 'JSON');
     """

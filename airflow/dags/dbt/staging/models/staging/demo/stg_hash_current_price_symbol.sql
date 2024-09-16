@@ -1,17 +1,17 @@
 WITH current_price AS (
-    -- Tham chiếu đến mô hình raw_current_price
+    -- data source current_price
     SELECT *
     FROM {{ source('RAW_TABLE', 'RAW_CURRENT_PRICE') }}
 ),
 symbol AS (
-    -- Dữ liệu từ bảng raw_symbol
+    -- data source symbol
     SELECT *
     FROM {{ source('RAW_TABLE', 'RAW_SYMBOL') }}
 )
 
 SELECT
-    MD5(cp.symbol) AS hk_symbol,  -- Tạo hash key cho symbol bằng MD5
-    MD5(CONCAT(cp.symbol, cp.record_datetime)) AS hk_current_price,  -- Tạo hash key cho current_price bằng cách kết hợp symbol và record_datetime
+    MD5(cp.symbol) AS hk_symbol,  -- create hash key for symbol
+    MD5(CONCAT(cp.symbol, cp.record_datetime)) AS hk_current_price,  -- create hash key for current_price
     cp.id,
     cp.price,
     cp.symbol,

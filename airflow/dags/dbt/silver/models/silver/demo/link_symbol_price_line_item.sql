@@ -1,7 +1,3 @@
-{{ config(
-    materialized='incremental'
-) }}
-
 SELECT
     pli.hk_symbol,
     pli.hk_price_line_item,
