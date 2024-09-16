@@ -121,7 +121,7 @@ data "aws_iam_policy_document" "codepipeline_policy" {
   statement {
     effect    = "Allow"
     actions   = ["codestar-connections:UseConnection"]
-    resources = ["arn:aws:codeconnections:ap-southeast-2:851725259561:connection/fe73b3c4-4e09-458e-8d27-8dce3430530d"]
+    resources = ["*"]
   }
 
   statement {
