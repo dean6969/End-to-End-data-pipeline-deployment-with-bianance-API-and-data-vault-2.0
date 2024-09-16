@@ -37,7 +37,7 @@ This project utilizes AWS Lambda, AWS Kinesis, and AWS CodeDeploy, orchestrated 
 
    The pipeline follows a **Data Vault 2.0** methodology to ensure scalability, historical tracking, and normalization of the data. Below is an overview of the Data Vault 2.0 architecture employed in the project:
 
-   ![Data Vault 2.0 Architecture](architecture/data_vault_2.0.png)
+   ![Data Vault 2.0 Architecture](architecture/data_vault_2_0.png)
 
 3. **ETL Pipeline:**
 
