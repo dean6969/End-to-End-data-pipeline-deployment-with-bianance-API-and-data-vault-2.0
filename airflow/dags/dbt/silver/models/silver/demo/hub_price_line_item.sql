@@ -6,7 +6,7 @@ WITH source_data AS (
 )
 
 SELECT
-    hk_price_line_item,   -
+    hk_price_line_item,   
     business_key_price_line_item,         -
     CURRENT_TIMESTAMP() AS hub_load_datetime
 FROM source_data

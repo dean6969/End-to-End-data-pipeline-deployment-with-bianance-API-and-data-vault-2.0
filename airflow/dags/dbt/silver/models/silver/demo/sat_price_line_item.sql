@@ -16,7 +16,7 @@ WITH source_data AS (
         taker_buy_base_asset_volume,
         taker_buy_quote_asset_volume,
         CURRENT_TIMESTAMP() AS sat_load_datetime
-    FROM {{ source('STAGING_TABLE', 'STG_HASH_PRICE_LINE_ITEM_SYMBOL') }}  -
+    FROM {{ source('STAGING_TABLE', 'STG_HASH_PRICE_LINE_ITEM_SYMBOL') }}  
 )
 
 SELECT
